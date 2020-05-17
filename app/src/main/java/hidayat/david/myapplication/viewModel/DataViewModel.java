@@ -32,7 +32,7 @@ public class DataViewModel extends AndroidViewModel {
         if(query == null){
             api = RetroServer.getClient().create(ApiRequest.class);
             final ArrayList<Data> listItems = new ArrayList<>();
-            Call<DataList> GetData = api.getMoviePopular(BuildConfig.API_KEY);
+            Call<DataList> GetData = api.getMoviePopular(BuildConfig.API_KEY,1);
             GetData.enqueue(new Callback<DataList>() {
                 @Override
                 public void onResponse(Call<DataList> call, Response<DataList> response) {

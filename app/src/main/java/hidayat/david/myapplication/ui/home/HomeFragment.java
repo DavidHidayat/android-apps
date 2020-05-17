@@ -9,16 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -28,8 +34,12 @@ import java.util.TimerTask;
 
 import hidayat.david.myapplication.R;
 import hidayat.david.myapplication.adapter.DataAdapter;
+import hidayat.david.myapplication.adapter.DataAdapter;
 import hidayat.david.myapplication.adapter.SliderAdapter;
 import hidayat.david.myapplication.model.Data;
+import hidayat.david.myapplication.model.Data;
+import hidayat.david.myapplication.ui.gallery.GalleryFragment;
+import hidayat.david.myapplication.viewModel.DataViewModel;
 import hidayat.david.myapplication.viewModel.DataViewModel;
 
 public class HomeFragment extends Fragment {
@@ -44,6 +54,7 @@ public class HomeFragment extends Fragment {
     Context context;
 
     private RecyclerView rv_data;
+    private TextView showMore;
 
     private DataAdapter adapter;
 //    private ProgressBar progressBar;
@@ -70,6 +81,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rv_data = view.findViewById(R.id.recyclerView);
+        showMore = view.findViewById(R.id.tv_popular_movies_show);
         adapter = new DataAdapter(getContext());
         adapter.notifyDataSetChanged();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -81,7 +93,20 @@ public class HomeFragment extends Fragment {
 //                showSelectedMovie(data);
             }
         });
+        showMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                navigationView.getMenu().getItem(1).setChecked(true);
+
+                Fragment fr = new GalleryFragment();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fr);
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

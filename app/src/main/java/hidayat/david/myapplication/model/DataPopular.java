@@ -5,14 +5,14 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-public class Data implements Parcelable {
+public class DataPopular implements Parcelable {
     int vote_count,id;
     boolean video,adult;
     float vote_average,popularity;
     String title,poster_path,original_language,original_title,backdrop_path,overview,release_date;
     List<Integer> genre_ids;
-    public  Data(){}
-    public Data(Parcel in) {
+    public DataPopular(){}
+    public DataPopular(Parcel in) {
         vote_count = in.readInt();
         id = in.readInt();
         video = in.readByte() != 0;
@@ -28,15 +28,15 @@ public class Data implements Parcelable {
         release_date = in.readString();
     }
 
-    public static final Creator<Data> CREATOR = new Creator<Data>() {
+    public static final Creator<DataPopular> CREATOR = new Creator<DataPopular>() {
         @Override
-        public Data createFromParcel(Parcel in) {
-            return new Data(in);
+        public DataPopular createFromParcel(Parcel in) {
+            return new DataPopular(in);
         }
 
         @Override
-        public Data[] newArray(int size) {
-            return new Data[size];
+        public DataPopular[] newArray(int size) {
+            return new DataPopular[size];
         }
     };
 
