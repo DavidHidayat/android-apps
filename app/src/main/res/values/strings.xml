@@ -15,5 +15,17 @@
     <string name="logo">Logo</string>
 
     <string name="problem_connection">Koneksi Bermasalah</string>
+    <string name="product">Product</string>
+    <string name="categories">Categories</string>
+    <string name="voucher">Voucher</string>
+    <string name="history_transaction">History Transaction</string>
+    <string name="tracking_order">Tracking Order</string>
+    <string name="check_up">Check Up</string>
+    <string name="settings">Settings</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about_us">About Us</string>
+    <string name="logout">Logout</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="show_more">Show More</string>
 
 </resources>
