@@ -38,6 +38,7 @@ public class DataAdapterPopular extends RecyclerView.Adapter<DataAdapterPopular.
     private OnItemClickCallback onItemClickCallback;
     private ApiRequest api;
     int page = 2;
+    int fragmentID;
 
     String TAG ="DataAdapter";
 
@@ -45,8 +46,9 @@ public class DataAdapterPopular extends RecyclerView.Adapter<DataAdapterPopular.
     public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback;
     }
-    public DataAdapterPopular(Context context)
+    public DataAdapterPopular(Context context,int fragmentID)
     {
+        this.fragmentID = fragmentID;
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.DataListPopularAdapter = new ArrayList<>();
@@ -68,7 +70,8 @@ public class DataAdapterPopular extends RecyclerView.Adapter<DataAdapterPopular.
     @Override
     public void onBindViewHolder(@NonNull final DataAdapterPopular.HolderData holder, int position) {
         final DataPopular data = DataListPopularAdapter.get(position);
-        if (position == DataListPopularAdapter.size()-9) {
+
+        if (position == DataListPopularAdapter.size()-9 && fragmentID == R.id.nav_gallery) {
             loadNewData(page);
             page++;
         }
@@ -78,11 +81,13 @@ public class DataAdapterPopular extends RecyclerView.Adapter<DataAdapterPopular.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                onItemClickCallback.onItemClicked(DataListAdapter.get(holder.getAdapterPosition()));
+                onItemClickCallback.onItemClicked(DataListPopularAdapter.get(holder.getAdapterPosition()));
             }
         });
     }
-
+    public interface OnItemClickCallback {
+        void onItemClicked(DataPopular data);
+    }
     public void loadNewData(int page){
         api = RetroServer.getClient().create(ApiRequest.class);
         final ArrayList<DataPopular> listItems = new ArrayList<>();
@@ -108,9 +113,7 @@ public class DataAdapterPopular extends RecyclerView.Adapter<DataAdapterPopular.
     public int getItemCount() {
         return (DataListPopularAdapter == null) ? 0 : DataListPopularAdapter.size();
     }
-    public interface OnItemClickCallback {
-        void onItemClicked(Data data);
-    }
+
     public class HolderData extends RecyclerView.ViewHolder {
         ImageView imgBrand;
         public HolderData(View itemView) {

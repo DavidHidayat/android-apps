@@ -32,17 +32,22 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import hidayat.david.myapplication.MainActivity;
 import hidayat.david.myapplication.R;
 import hidayat.david.myapplication.adapter.DataAdapter;
 import hidayat.david.myapplication.adapter.DataAdapter;
+import hidayat.david.myapplication.adapter.DataAdapterPopular;
 import hidayat.david.myapplication.adapter.SliderAdapter;
 import hidayat.david.myapplication.model.Data;
 import hidayat.david.myapplication.model.Data;
+import hidayat.david.myapplication.model.DataPopular;
 import hidayat.david.myapplication.ui.gallery.GalleryFragment;
+import hidayat.david.myapplication.viewModel.DataPopularViewModel;
 import hidayat.david.myapplication.viewModel.DataViewModel;
 import hidayat.david.myapplication.viewModel.DataViewModel;
 
 public class HomeFragment extends Fragment {
+    public static final String EXTRA_DATA = "data_detail";
 
     private HomeViewModel homeViewModel;
     private ViewPager viewPager;
@@ -56,20 +61,19 @@ public class HomeFragment extends Fragment {
     private RecyclerView rv_data;
     private TextView showMore;
 
-    private DataAdapter adapter;
-//    private ProgressBar progressBar;
-    private DataViewModel dataViewModel;
+    private DataAdapterPopular adapter;
+    private DataPopularViewModel dataViewModel;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        dataViewModel = ViewModelProviders.of(getActivity()).get(DataViewModel.class);
+        dataViewModel = ViewModelProviders.of(getActivity()).get(DataPopularViewModel.class);
         dataViewModel.getItem().observe(getActivity(),getData);
         dataViewModel.setItem(null);
     }
-    private Observer<ArrayList<Data>> getData = new Observer<ArrayList<Data>>() {
+    private Observer<ArrayList<DataPopular>> getData = new Observer<ArrayList<DataPopular>>() {
         @Override
-        public void onChanged(ArrayList<Data> items) {
+        public void onChanged(ArrayList<DataPopular> items) {
             if (items != null) {
                 adapter.setData(items);
 //                showLoading(false);
@@ -82,29 +86,23 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rv_data = view.findViewById(R.id.recyclerView);
         showMore = view.findViewById(R.id.tv_popular_movies_show);
-        adapter = new DataAdapter(getContext());
+        adapter = new DataAdapterPopular(getContext(),R.id.nav_home);
         adapter.notifyDataSetChanged();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rv_data.setLayoutManager(layoutManager);
         rv_data.setAdapter(adapter);
-        adapter.setOnItemClickCallback(new DataAdapter.OnItemClickCallback() {
+        adapter.setOnItemClickCallback(new DataAdapterPopular.OnItemClickCallback() {
             @Override
-            public void onItemClicked(Data data) {
-//                showSelectedMovie(data);
-            }
+            public void onItemClicked(DataPopular data) {
+                Bundle args = new Bundle();
+                args.putParcelable(EXTRA_DATA,data);
+                ((MainActivity)getActivity()).displaySelectedScreen(212,args);            }
         });
         showMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-                navigationView.getMenu().getItem(1).setChecked(true);
-
-                Fragment fr = new GalleryFragment();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment, fr);
-                fragmentTransaction.commit();
+                ((MainActivity)getActivity()).setNavigationSelected(1);
+                ((MainActivity)getActivity()).displaySelectedScreen(R.id.nav_gallery,null);
             }
         });
     }
