@@ -31,6 +31,7 @@ import hidayat.david.myapplication.ui.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private String TAG = "MainActivity";
+    private int lastMenu = R.id.nav_home;
     NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        setNavigationSelected(0);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -82,32 +84,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
 
         //initializing the fragment object which is selected
-        switch (idMenu){
-            case R.id.nav_home:
-                fragment = new HomeFragment();
-                break;
-            case R.id.nav_gallery:
-                fragment = new GalleryFragment();
-                break;
-            case 212:
-                fragment = new DetailMovieFragment();
-                break;
+        if (lastMenu != idMenu ){
+            switch (idMenu){
+                case R.id.nav_home:
+                    fragment = new HomeFragment();
+                    break;
+                case R.id.nav_gallery:
+                    fragment = new GalleryFragment();
+                    break;
+                case 212:
+                    fragment = new DetailMovieFragment();
+                    break;
+            }
+            if(args != null){
+                fragment.setArguments(args);
+            }
+            //replacing the fragment
+            if (fragment != null) {
+                FragmentManager fm = getSupportFragmentManager();
+                fm.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.nav_host_fragment, fragment);
+                if(idMenu != R.id.nav_home){
+                    ft.addToBackStack(null);
+                }
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.commit();
+            }
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         }
-        if(args != null){
-            fragment.setArguments(args);
-        }
-        //replacing the fragment
-        if (fragment != null) {
-            FragmentManager fm = getSupportFragmentManager();
-            fm.popBackStack(null,0);
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.nav_host_fragment, fragment);
-            ft.addToBackStack(null);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        lastMenu = idMenu;
     }
     public void setNavigationSelected(int index){
         navigationView.getMenu().getItem(index).setChecked(true);
